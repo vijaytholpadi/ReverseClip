@@ -2,8 +2,8 @@
 //  Constants.h
 //  ReverseClip
 //
-//  Created by Mikael Hellqvist on 2013-11-21.
-//  Copyright (c) 2013 Mikael Hellqvist. All rights reserved.
+//  Created by Vijay Tholpadi on 2013-11-21.
+//  Copyright (c) 2015 Vijay Tholpadi. All rights reserved.
 //
 
 #ifndef ReverseClip_Constants_h
