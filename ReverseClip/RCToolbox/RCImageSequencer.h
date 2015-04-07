@@ -1,7 +1,8 @@
-// Please contact me if you use this code. Would be glad to know if it has helped you anything :)
-// mikaelhellqvist@gmail.com
+// Originally forked from mikaelhellqvist/ReverseClip
+// Please contact me if you use this code. Would be glad to know if it has helped you :)
+// vijay@thegeekprojekt.com
 // Thanks,
-// Mikael Hellqvist
+// Vijay Tholpadi
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
@@ -17,5 +18,7 @@
 @property (unsafe_unretained) id <ImageSequencerDelegate> delegate;
 
 - (void)createImageSequenceWithAsset:(AVURLAsset*)urlAsset;
+
+- (void)cancel:(NSNotification*)notification;
 
 @end

@@ -1,7 +1,8 @@
-// Please contact me if you use this code. Would be glad to know if it has helped you anything :)
-// mikaelhellqvist@gmail.com
+// Originally forked from mikaelhellqvist/ReverseClip
+// Please contact me if you use this code. Would be glad to know if it has helped you :)
+// vijay@thegeekprojekt.com
 // Thanks,
-// Mikael Hellqvist
+// Vijay Tholpadi
 
 #import "RCImageSequencer.h"
 
@@ -9,9 +10,9 @@
 #import "RCToolbox.h"
 #import "RCConstants.h"
 
-#define FRAME_WIDTH 640
-#define FRAME_HEIGHT 360
-#define FRAMES_PER_SEC 25
+
+#define FRAME_WIDTH 320
+#define FRAME_HEIGHT 320
 #define FRAME_SCALE 600
 
 @interface RCImageSequencer ()
@@ -26,6 +27,7 @@
 @property Float64 fakeTimeElapsed;
 @property Float64 incrementTime;
 @property NSString *currentFileName;
+@property CGImageRef previousImageRef;
 @end
 
 @implementation RCImageSequencer
@@ -34,7 +36,11 @@
 {
     self = [super init];
     if (self) {
-        _incrementTime = (Float64)1/FRAMES_PER_SEC;
+        if (iPhone6Screen() || iPhone6PScreen()) {
+            _incrementTime = (Float64)1/85;
+        } else {
+            _incrementTime = (Float64)1/25;
+        }
         _fakeTimeElapsed = 0.0;
     }
     return self;
@@ -83,11 +89,25 @@
                                              }
                                              
                                              if (result == AVAssetImageGeneratorFailed) {
-                                                 NSLog(@"Image Capture %i of %i Failed with error: %@", [_imageSequence count], [times count],[error localizedFailureReason]);
+                                                 NSLog(@"Image Capture %lu of %lu Failed with error: %@", (unsigned long)[_imageSequence count], (unsigned long)[times count],[error localizedFailureReason]);
+                                                 
+                                                 //Loading the previous imageRef incase of failure of an image frame generation
+                                                 image = self.previousImageRef;
+                                                 
+                                                 [_imageSequence addObject:(__bridge id)image];
+                                                 
+                                                 _percentageDone = ((Float32)[_imageSequence count] / (Float32)[times count])*100;
+                                                 
+                                                 if([_delegate respondsToSelector:@selector(imageSequencerProgress:)]){
+                                                     [_delegate imageSequencerProgress:_percentageDone];
+                                                 }
                                              }
                                              if (result == AVAssetImageGeneratorCancelled) {
                                                  NSLog(@"Canceled");
                                              }
+                                             
+                                             // Needs to go away when we have better compatibility for the iPhone 6 video.
+                                             self.previousImageRef = image;
                                          }];
 }
 
@@ -140,7 +160,7 @@
         
         CFRelease(imageData);
         CVPixelBufferRelease(pixelBuffer);
-        
+
         _fakeTimeElapsed += _incrementTime;
 		if (appended) {
             [_delegate imageSequencerProgress:_percentageDone];
