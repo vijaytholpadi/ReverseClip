@@ -1,15 +1,16 @@
-// Please contact me if you use this code. Would be glad to know if it has helped you anything :)
-// mikaelhellqvist@gmail.com
+// Originally forked from mikaelhellqvist/ReverseClip
+// Please contact me if you use this code. Would be glad to know if it has helped you :)
+// vijay@thegeekprojekt.com
 // Thanks,
-// Mikael Hellqvist
+// Vijay Tholpadi
 
 #import "RCExporter.h"
 #import "RCToolbox.h"
 
 @implementation RCExporter
 
--(void)exportCompositionWithAsset:(AVURLAsset*)urlAsset exportName:(NSString*)exportFileName shouldBeReversed:(BOOL)shouldBeReversed
-{
+-(void)exportCompositionWithAsset:(AVURLAsset*)urlAsset exportName:(NSString*)exportFileName shouldBeReversed:(BOOL)shouldBeReversed {
+    
     currentFileExportName = exportFileName;
     
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:urlAsset presetName:AVAssetExportPresetMediumQuality];
@@ -46,19 +47,22 @@
 	}];
 }
 
+
 -(void) exportDone:(NSObject*)userInfo {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ExportedMovieNotification" object:self];
 }
 
--(void)imageSequencerProgress:(Float64)percentage
-{
+
+-(void)imageSequencerProgress:(Float64)percentage {
     NSLog(@"percentage %f",percentage);
+    [self.delegate imageSequenceExportProgressAt:percentage];
 }
 
--(void)exportedImageSequenceToFileName:(NSString*)fileName
-{
+
+-(void)exportedImageSequenceToFileName:(NSString*)fileName {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ExportedImageSequenceNotification" object:self];
     NSLog(@"Exported image sequence to %@",fileName);
 }
+
 
 @end
