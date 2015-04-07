@@ -1,7 +1,8 @@
-// Please contact me if you use this code. Would be glad to know if it has helped you anything :)
-// mikaelhellqvist@gmail.com
+// Originally forked from mikaelhellqvist/ReverseClip
+// Please contact me if you use this code. Would be glad to know if it has helped you :)
+// vijay@thegeekprojekt.com
 // Thanks,
-// Mikael Hellqvist
+// Vijay Tholpadi
 
 #import "RCComposer.h"
 #import "RCToolbox.h"
@@ -53,6 +54,7 @@
     CGSize videoSize = [clipVideoTrack naturalSize];
     self.composition.naturalSize = videoSize;
 
+    [self emptyComposition];
     [_compositionVideoTrack insertTimeRange:editRange ofTrack:clipVideoTrack atTime:self.composition.duration error:&editError];
     
     if (!editError) {
